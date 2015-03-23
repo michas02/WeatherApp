@@ -1,6 +1,8 @@
 # WeatherApp
 Aplikacja do odczytywania pogody przy pomocy api OpenWeatherMap
 
+Strona api: http://openweathermap.org/api
+
 Pogodę można odczytać na 3 sposoby:
 
 1. Poprzez podanie nazwy miasta
