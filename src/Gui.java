@@ -131,10 +131,10 @@ public class Gui extends JFrame {
 		textFieldID.setColumns(10);
 		
 		JLabel lblTryb = new JLabel("Tryb");
-		lblTryb.setBounds(200, 11, 46, 14);
+		lblTryb.setBounds(200, -1, 131, 39);
 		contentPane.add(lblTryb);
 		
-		String []modes = {"Nazwa","Wspó³rzêdne","ID"};
+		String []modes = {"Nazwa","WspÃ³Å‚rzÄ™dne","ID"};
 		final JComboBox comboBoxMode = new JComboBox(modes);
 		comboBoxMode.setBounds(240, 7, 91, 22);
 		contentPane.add(comboBoxMode);
@@ -159,7 +159,7 @@ public class Gui extends JFrame {
 					textFieldWindSpeed.setText(Double.toString(weather.getWeatherInfo().getWindSpeed()));
 					textFieldWindChill.setText(String.format("%.2f",weather.getChillWind()));
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Nie uda³o siê uzyskaæ informacji o pogodzie");
+					JOptionPane.showMessageDialog(null, "Nie udaÅ‚o siÄ™ uzyskaÄ‡ informacji o pogodzie");
 					e.printStackTrace();
 				}
 			}

@@ -13,7 +13,7 @@ public class Main {
 					+" m/s");
 			System.out.println("Temperatura odczuwalna "+weather.getChillWind());
 		} catch (Exception e) {
-			System.out.println("Nie uda³o siê uzyskaæ informacji o pogodzie");
+			System.out.println("Nie udaÅ‚o siÄ™ uzyskaÄ‡ informacji o pogodzie");
 			e.printStackTrace();
 		}
 		
