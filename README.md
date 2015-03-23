@@ -1,5 +1,5 @@
 # WeatherApp
-Aplikacja do odczytywania pogody
+Aplikacja do odczytywania pogody przy pomocy api OpenWeatherMap
 
 Pogodę można odczytać na 3 sposoby:
 
