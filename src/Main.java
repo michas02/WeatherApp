@@ -5,6 +5,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		WeatherApp weather = new WeatherApp();
+		
 		try {
 			weather.updateData("Wroclaw");
 			System.out.println("Temperatura: "+Double.toString(weather.getWeatherInfo().getTemperature())
@@ -17,6 +18,8 @@ public class Main {
 			System.out.println("Nie udało się uzyskać informacji o pogodzie");
 			e.printStackTrace();
 		}
+		
+		weather.startAutoUpdate();
 		
 	}
 
