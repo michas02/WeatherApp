@@ -10,7 +10,8 @@ public class Main {
 			System.out.println("Temperatura: "+Double.toString(weather.getWeatherInfo().getTemperature())
 					+" Stopni Celsjusza\nWilgotnosc: "+Double.toString(weather.getWeatherInfo().getHumidity())
 					+" %\nPredkosc wiatru: "+Double.toString(weather.getWeatherInfo().getWindSpeed())
-					+" m/s");
+					+" m/s"
+					+"\nCisnienie: "+Double.toString(weather.getWeatherInfo().getPressure())+" hPa");
 			System.out.println("Temperatura odczuwalna "+weather.getChillWind());
 		} catch (Exception e) {
 			System.out.println("Nie udało się uzyskać informacji o pogodzie");

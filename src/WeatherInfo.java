@@ -3,6 +3,7 @@ public class WeatherInfo {
 	private double temperature;
 	private double humidity;
 	private double windSpeed;
+	private double pressure;
 	
 	
 	public double getTemperature() {
@@ -23,6 +24,13 @@ public class WeatherInfo {
 	public void setWindSpeed(double windSpeed) {
 		this.windSpeed = windSpeed;
 	}
+	public double getPressure() {
+		return pressure;
+	}
+	public void setPressure(double pressure) {
+		this.pressure = pressure;
+	}
+	
 	
 	
 }

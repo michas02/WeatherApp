@@ -28,6 +28,7 @@ public class Gui extends JFrame {
 	private JTextField textFieldWindChill;
 	private JTextField textFieldCoords;
 	private JTextField textFieldID;
+	private JTextField textFieldPressure;
 
 	/**
 	 * Launch the application.
@@ -80,7 +81,7 @@ public class Gui extends JFrame {
 		contentPane.add(lblPrdkoWiatru);
 		
 		JLabel lblTemperaturaOdczuwalna = new JLabel("Temperatura odczuwalna");
-		lblTemperaturaOdczuwalna.setBounds(10, 205, 180, 14);
+		lblTemperaturaOdczuwalna.setBounds(10, 225, 180, 14);
 		contentPane.add(lblTemperaturaOdczuwalna);
 		
 		textFieldTemperature = new JTextField();
@@ -103,7 +104,7 @@ public class Gui extends JFrame {
 		
 		textFieldWindChill = new JTextField();
 		textFieldWindChill.setEditable(false);
-		textFieldWindChill.setBounds(200, 202, 86, 20);
+		textFieldWindChill.setBounds(200, 222, 86, 20);
 		contentPane.add(textFieldWindChill);
 		textFieldWindChill.setColumns(10);
 		
@@ -134,6 +135,16 @@ public class Gui extends JFrame {
 		lblTryb.setBounds(200, -1, 131, 39);
 		contentPane.add(lblTryb);
 		
+		JLabel lblCinienie = new JLabel("Ciśnienie");
+		lblCinienie.setBounds(10, 200, 86, 14);
+		contentPane.add(lblCinienie);
+		
+		textFieldPressure = new JTextField();
+		textFieldPressure.setEditable(false);
+		textFieldPressure.setBounds(200, 199, 86, 20);
+		contentPane.add(textFieldPressure);
+		textFieldPressure.setColumns(10);
+		
 		String []modes = {"Nazwa","Współrzędne","ID"};
 		final JComboBox comboBoxMode = new JComboBox(modes);
 		comboBoxMode.setBounds(240, 7, 91, 22);
@@ -158,6 +169,7 @@ public class Gui extends JFrame {
 					textFieldHumidity.setText(Double.toString(weather.getWeatherInfo().getHumidity()));
 					textFieldWindSpeed.setText(Double.toString(weather.getWeatherInfo().getWindSpeed()));
 					textFieldWindChill.setText(String.format("%.2f",weather.getChillWind()));
+					textFieldPressure.setText(String.format("%.2f", weather.getWeatherInfo().getPressure()));
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Nie udało się uzyskać informacji o pogodzie");
 					e.printStackTrace();

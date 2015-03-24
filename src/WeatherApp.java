@@ -49,6 +49,7 @@ public class WeatherApp {
 		weatherInfo.setTemperature(parser.getTemperature(weatherInfoJSON));
 		weatherInfo.setHumidity(parser.getHumidity(weatherInfoJSON));
 		weatherInfo.setWindSpeed(parser.getWindSpeed(weatherInfoJSON));
+		weatherInfo.setPressure(parser.getPressure(weatherInfoJSON));
 	}
 	
 }

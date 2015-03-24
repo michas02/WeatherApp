@@ -18,6 +18,12 @@ public class WeatherParser {
 		return getValue("wind","speed",obj);
 	}
 	
+	public double getPressure(String data)
+	{
+		JSONObject obj = new JSONObject(data);
+		return getValue("main","pressure",obj);
+	}
+	
 	private double getValue(String tag, String name, JSONObject obj)
 	{
 		double value=0;
