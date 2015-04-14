@@ -82,8 +82,14 @@ public class WeatherApp {
 		//Wzor wziety z tad
 		//http://forum.lowcyburz.pl/viewtopic.php?p=22208
 		
-		return (37-((37-weatherInfo.getTemperature())/(0.68-0.0014*weatherInfo.getHumidity()+(1/(1.76+1.4*Math.pow((weatherInfo.getWindSpeed()/3.6), 0.75)))))
+		return (37-((37-weatherInfo.getTemperature())/(0.68-0.0014*weatherInfo.getHumidity()+(1/(1.76+1.4*Math.pow((weatherInfo.getWindSpeed()/3.6/3.6), 0.75)))))
 				-0.29*weatherInfo.getTemperature()*(1-(weatherInfo.getHumidity()/100)));
+	}
+	
+	public double getChillWind(double temperature,double humidity,double windSpeed)
+	{
+		return (37-((37-temperature)/(0.68-0.0014*humidity+(1/(1.76+1.4*Math.pow((windSpeed/3.6/3.6), 0.75)))))
+				-0.29*temperature*(1-(humidity/100)));
 	}
 	public void updateData(int id) throws Exception
 	{
@@ -130,7 +136,7 @@ public class WeatherApp {
 	{
 		weatherInfo.setTemperature(parser.getTemperature(weatherInfoJSON));
 		weatherInfo.setHumidity(parser.getHumidity(weatherInfoJSON));
-		weatherInfo.setWindSpeed(parser.getWindSpeed(weatherInfoJSON));
+		weatherInfo.setWindSpeed(parser.getWindSpeed(weatherInfoJSON)*3.6);
 		weatherInfo.setPressure(parser.getPressure(weatherInfoJSON));
 	}
 	
@@ -172,5 +178,10 @@ public class WeatherApp {
 	synchronized public void stopAutoUpdate()
 	{
 		deamonRunning=false;
+	}
+	
+	public String toString()
+	{
+		return weatherInfoJSON;
 	}
 }
