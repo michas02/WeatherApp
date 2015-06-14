@@ -97,6 +97,11 @@ public class XmlBuilder {
     	addSetting("longitude", Double.toString(settings.getLongitude()), mainModule);
     	addSetting("updateMode", Integer.toString(settings.getUpdateMode()),mainModule);
     	
+    	addSetting("dbUser",settings.getDbUser(),mainModule);
+    	addSetting("dbPassword",settings.getDbPassword(),mainModule);
+    	addSetting("dbUrl",settings.getDbUrl(),mainModule);
+    	
+    	
     	addSetting("website", settings.getWebsite(),websiteModule);
     	addSetting("line", settings.getLine(),websiteModule);
     	addSetting("ownWebsite", Boolean.toString(settings.isOwnWebsite()),websiteModule);

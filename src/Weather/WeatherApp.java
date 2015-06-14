@@ -24,7 +24,7 @@ public class WeatherApp {
 	public WeatherApp()
 	{
 		settings = new Settings();
-		dbManager = new DBManager();
+		dbManager = new DBManager("","","");
 		deamon = new UpdateDeamon();
 		deamonRunning=true;
 		deamonPaused=true;
@@ -197,6 +197,7 @@ public class WeatherApp {
 		this.settings=settings;
 		scrapper.setWebsiteAddress(settings.getWebsite());
 		scrapper.setTemperatureForm(settings.getLine());
+		dbManager = new DBManager(settings);
 	}
 	public Settings getSettings()
 	{

@@ -40,6 +40,9 @@ public class XmlLoader {
 					settings.setLongitude(Double.parseDouble(eElement.getAttribute("longitude")));
 					settings.setUpdateMode(Integer.parseInt(eElement.getAttribute("updateMode")));
 					settings.setUpdateTime(Integer.parseInt(eElement.getAttribute("updateTime")));
+					settings.setDbPassword(eElement.getAttribute("dbPassword"));
+					settings.setDbUser(eElement.getAttribute("dbUser"));
+					settings.setDbUrl(eElement.getAttribute("dbUrl"));
 				}
 			}
 			

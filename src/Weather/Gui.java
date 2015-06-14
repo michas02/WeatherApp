@@ -37,6 +37,9 @@ public class Gui extends JFrame {
 	
 	private String website;
 	private String line;
+	private JTextField textFielddbUser;
+	private JTextField textFielddbPassword;
+	private JTextField textFielddbUrl;
 	/**
 	 * Launch the application.
 	 */
@@ -281,6 +284,9 @@ public class Gui extends JFrame {
 				}
 				
 				weather.getSettings().setUpdateMode(comboBoxMode.getSelectedIndex());
+				weather.getSettings().setDbUser(textFielddbUser.getText());
+				weather.getSettings().setDbPassword(textFielddbPassword.getText());
+				weather.getSettings().setDbUrl(textFielddbUrl.getText());
 				XmlBuilder xml = new XmlBuilder(weather.getSettings());
 				xml.createXml();
 				try {
@@ -296,5 +302,36 @@ public class Gui extends JFrame {
 		
 		
 		contentPane.add(checkBoxTemperature);
+		
+		JLabel lblBazaDanych = new JLabel("Baza danych");
+		lblBazaDanych.setBounds(259, 155, 173, 14);
+		contentPane.add(lblBazaDanych);
+		
+		JLabel lblUytkownik = new JLabel("Użytkownik");
+		lblUytkownik.setBounds(259, 180, 72, 14);
+		contentPane.add(lblUytkownik);
+		
+		JLabel lblHaso = new JLabel("Hasło");
+		lblHaso.setBounds(259, 200, 46, 14);
+		contentPane.add(lblHaso);
+		
+		JLabel lblAdres = new JLabel("Adres");
+		lblAdres.setBounds(259, 225, 46, 14);
+		contentPane.add(lblAdres);
+		
+		textFielddbUser = new JTextField();
+		textFielddbUser.setBounds(356, 174, 86, 20);
+		contentPane.add(textFielddbUser);
+		textFielddbUser.setColumns(10);
+		
+		textFielddbPassword = new JTextField();
+		textFielddbPassword.setBounds(356, 197, 86, 20);
+		contentPane.add(textFielddbPassword);
+		textFielddbPassword.setColumns(10);
+		
+		textFielddbUrl = new JTextField();
+		textFielddbUrl.setBounds(356, 219, 86, 20);
+		contentPane.add(textFielddbUrl);
+		textFielddbUrl.setColumns(10);
 	}
 }
