@@ -1,37 +1,39 @@
+package Weather;
 import java.io.IOException;
+
+import Settings.Settings;
 
 
 public class WeatherApp {
 	private int sleepTime;
 	
-	private String cityName;
-	private int cityId;
-	private double cityLatitude;
-	private double cityLongitude;
+	private Settings settings;
 	
 	private String weatherInfoJSON = null;
 	private HttpClient client;
 	private WeatherParser parser;
 	private WeatherInfo weatherInfo;
+	private WebScrapper scrapper;
 	
 	private UpdateDeamon deamon;
 	private boolean deamonRunning;
 	private boolean deamonPaused;
+	
+	private DBManager dbManager;
+	
 	public WeatherApp()
 	{
+		settings = new Settings();
+		dbManager = new DBManager();
 		deamon = new UpdateDeamon();
 		deamonRunning=true;
 		deamonPaused=true;
 		deamon.start();
 		sleepTime=1;
-		cityName="";
-		cityId=0;
-		cityLatitude=0;
-		cityLongitude=0;
 		client = new HttpClient();
 		parser = new WeatherParser();
 		weatherInfo = new WeatherInfo();
-		//weatherInfoJSON = client.getWeatherDataByCityName("Wroclaw");
+		scrapper = new WebScrapper();
 	}
 	
 	class UpdateDeamon extends Thread
@@ -62,7 +64,7 @@ public class WeatherApp {
 						if(!deamonRunning||deamonPaused)
 							break;
 						try {
-							Thread.sleep(60*1000);
+							Thread.sleep(settings.getUpdateTime()*1000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -82,8 +84,7 @@ public class WeatherApp {
 		//Wzor wziety z tad
 		//http://forum.lowcyburz.pl/viewtopic.php?p=22208
 		
-		return (37-((37-weatherInfo.getTemperature())/(0.68-0.0014*weatherInfo.getHumidity()+(1/(1.76+1.4*Math.pow((weatherInfo.getWindSpeed()/3.6/3.6), 0.75)))))
-				-0.29*weatherInfo.getTemperature()*(1-(weatherInfo.getHumidity()/100)));
+		return 13.12 + 0.6215*weatherInfo.getTemperature()-11.37*Math.pow(weatherInfo.getWindSpeed(),0.16)+0.3965*weatherInfo.getTemperature()*Math.pow(weatherInfo.getWindSpeed(),0.16);
 	}
 	
 	public double getChillWind(double temperature,double humidity,double windSpeed)
@@ -114,53 +115,59 @@ public class WeatherApp {
 	
 	public void updateData() throws Exception
 	{
-		if(cityId==0&&cityName.equals("")&&cityLatitude==0&&cityLongitude==0)
+		if(settings.getCityId()==0&&settings.getCityName().equals("")&&settings.getLatitude()==0&&settings.getLongitude()==0)
 		{
 			throw new Exception("Brak wcześniej zapisanych miast");
 		}
-		else if(cityId!=0)
+		else if(settings.getCityId()!=0)
 		{
-			updateData(cityId);
+			updateData(settings.getCityId());
 		}
-		else if(!cityName.equals(""))
+		else if(!settings.getCityName().equals(""))
 		{
-			updateData(cityName);
+			updateData(settings.getCityName());
 		}
 		else
 		{
-			updateData(cityLatitude,cityLongitude);
+			updateData(settings.getLatitude(),settings.getLongitude());
 		}
+		if(settings.isOwnWebsite())
+		{
+			scrapper.updateWeatherInfo();
+			weatherInfo.setTemperature(scrapper.getWeatherInfo().getTemperature());
+		}
+		dbManager.insertData((float)getChillWind());
 	}
 	
 	private void parseData()
 	{
 		weatherInfo.setTemperature(parser.getTemperature(weatherInfoJSON));
 		weatherInfo.setHumidity(parser.getHumidity(weatherInfoJSON));
-		weatherInfo.setWindSpeed(parser.getWindSpeed(weatherInfoJSON)*3.6);
+		weatherInfo.setWindSpeed(parser.getWindSpeed(weatherInfoJSON));
 		weatherInfo.setPressure(parser.getPressure(weatherInfoJSON));
 	}
 	
 	private void setCity(Object data)
 	{
-		cityId=0;
-		cityName="";
-		cityLatitude=0;
-		cityLongitude=0;
+		settings.setCityId(0);
+		settings.setCityName("");
+		settings.setLatitude(0);
+		settings.setLongitude(0);
 		if(data instanceof Integer)
 		{
-			cityId=(int)data;
+			settings.setCityId((Integer)data);;
 		}
 		else if(data instanceof String)
 		{
-			cityName=(String)data;
+			settings.setCityName((String)data);
 		}
 	}
 	private void setCity(double latitude, double longitude)
 	{
-		cityId=0;
-		cityName="";
-		cityLatitude=latitude;
-		cityLongitude=longitude;
+		settings.setCityId(0);
+		settings.setCityName("");
+		settings.setLatitude(latitude);
+		settings.setLongitude(longitude);
 	}
 	
 	public void setSleepTime(int minutes)
@@ -183,5 +190,16 @@ public class WeatherApp {
 	public String toString()
 	{
 		return weatherInfoJSON;
+	}
+	
+	public void setSettings(Settings settings)
+	{
+		this.settings=settings;
+		scrapper.setWebsiteAddress(settings.getWebsite());
+		scrapper.setTemperatureForm(settings.getLine());
+	}
+	public Settings getSettings()
+	{
+		return this.settings;
 	}
 }

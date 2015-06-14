@@ -1,3 +1,4 @@
+package Weather;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,7 +42,6 @@ private String getWeatherData(String url) {
 	     con.setDoOutput(true);
 	 
 	     con.connect();
-	     // Let's read the response
 	 
 	     StringBuffer buffer = new StringBuffer();
 	 	 is = con.getInputStream();

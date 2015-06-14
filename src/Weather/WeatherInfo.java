@@ -1,3 +1,4 @@
+package Weather;
 
 public class WeatherInfo {
 	private double temperature;

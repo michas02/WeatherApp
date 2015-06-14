@@ -1,3 +1,4 @@
+package Weather;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -16,6 +17,9 @@ import java.io.IOException;
 
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
+import javax.xml.transform.TransformerException;
+
+import Settings.XmlBuilder;
 
 
 public class Gui extends JFrame {
@@ -30,7 +34,9 @@ public class Gui extends JFrame {
 	private JTextField textFieldCoords;
 	private JTextField textFieldID;
 	private JTextField textFieldPressure;
-
+	
+	private String website;
+	private String line;
 	/**
 	 * Launch the application.
 	 */
@@ -51,6 +57,8 @@ public class Gui extends JFrame {
 	 * Create the frame.
 	 */
 	public Gui() {
+		website="";
+		line="";
 		weather = new WeatherApp();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -64,7 +72,7 @@ public class Gui extends JFrame {
 		contentPane.add(lblMiasto);
 		
 		textFieldCity = new JTextField();
-		textFieldCity.setText("Wroclaw\t");
+		textFieldCity.setText("Wroclaw");
 		textFieldCity.setBounds(104, 8, 86, 20);
 		contentPane.add(textFieldCity);
 		textFieldCity.setColumns(10);
@@ -87,25 +95,25 @@ public class Gui extends JFrame {
 		
 		textFieldTemperature = new JTextField();
 		textFieldTemperature.setEditable(false);
-		textFieldTemperature.setBounds(240, 127, 86, 20);
+		textFieldTemperature.setBounds(163, 127, 86, 20);
 		contentPane.add(textFieldTemperature);
 		textFieldTemperature.setColumns(10);
 		
 		textFieldHumidity = new JTextField();
 		textFieldHumidity.setEditable(false);
-		textFieldHumidity.setBounds(240, 152, 86, 20);
+		textFieldHumidity.setBounds(163, 152, 86, 20);
 		contentPane.add(textFieldHumidity);
 		textFieldHumidity.setColumns(10);
 		
 		textFieldWindSpeed = new JTextField();
 		textFieldWindSpeed.setEditable(false);
-		textFieldWindSpeed.setBounds(240, 177, 86, 20);
+		textFieldWindSpeed.setBounds(163, 177, 86, 20);
 		contentPane.add(textFieldWindSpeed);
 		textFieldWindSpeed.setColumns(10);
 		
 		textFieldWindChill = new JTextField();
 		textFieldWindChill.setEditable(false);
-		textFieldWindChill.setBounds(240, 222, 86, 20);
+		textFieldWindChill.setBounds(163, 222, 86, 20);
 		contentPane.add(textFieldWindChill);
 		textFieldWindChill.setColumns(10);
 		
@@ -142,39 +150,17 @@ public class Gui extends JFrame {
 		
 		textFieldPressure = new JTextField();
 		textFieldPressure.setEditable(false);
-		textFieldPressure.setBounds(240, 197, 86, 20);
+		textFieldPressure.setBounds(163, 194, 86, 20);
 		contentPane.add(textFieldPressure);
 		textFieldPressure.setColumns(10);
 		
-		
-		JLabel lblWasne = new JLabel("Własne");
-		lblWasne.setBounds(188, 105, 46, 14);
-		contentPane.add(lblWasne);
-		
-		final JCheckBox checkBoxTemperature = new JCheckBox("");
-		checkBoxTemperature.setBounds(198, 126, 21, 23);
-		contentPane.add(checkBoxTemperature);
-		
-		final JCheckBox checkBoxHumidity = new JCheckBox("");
-		checkBoxHumidity.setBounds(198, 151, 21, 23);
-		contentPane.add(checkBoxHumidity);
-		
-		final JCheckBox checkBoxWindSpeed = new JCheckBox("");
-		checkBoxWindSpeed.setBounds(198, 176, 21, 23);
-		contentPane.add(checkBoxWindSpeed);
-		
-		final JCheckBox checkBoxChillWind = new JCheckBox("");
-		checkBoxChillWind.setBounds(198, 221, 21, 23);
-		contentPane.add(checkBoxChillWind);
-		
-		final JCheckBox checkBoxPressure = new JCheckBox("");
-		checkBoxPressure.setBounds(198, 200, 21, 23);
-		contentPane.add(checkBoxPressure);
-		
-		String []modes = {"Nazwa","Współrzędne","ID","Własna strona"};
+		String []modes = {"Nazwa","Współrzędne","ID"};
 		final JComboBox comboBoxMode = new JComboBox(modes);
 		comboBoxMode.setBounds(240, 7, 91, 22);
 		contentPane.add(comboBoxMode);
+		
+		final JCheckBox checkBoxTemperature = new JCheckBox("Własna strona");
+		checkBoxTemperature.setBounds(255, 127, 177, 23);
 		
 		JButton btnUpdate = new JButton("Aktualizuj");
 		btnUpdate.addActionListener(new ActionListener() {
@@ -183,19 +169,20 @@ public class Gui extends JFrame {
 				try {
 					String []numbers;
 					numbers=textFieldCoords.getText().split(",");
-					weather.updateData(Double.parseDouble(numbers[0]), Double.parseDouble(numbers[1]));
+					
 					if(comboBoxMode.getSelectedIndex()==0)
 						weather.updateData(textFieldCity.getText());
 					else if(comboBoxMode.getSelectedIndex()==1)
 					{
-						
+						weather.updateData(Double.parseDouble(numbers[0]), Double.parseDouble(numbers[1]));
 					}
 					else if(comboBoxMode.getSelectedIndex()==2)
 					{
 						weather.updateData(Integer.parseInt(textFieldID.getText()));
 					}
-					else if(comboBoxMode.getSelectedIndex()==3)
+					if(checkBoxTemperature.isSelected())
 					{
+						weather.updateData(textFieldCity.getText());
 						String websiteAddress;
 						String temperatureForm = null;
 						String humidityForm = null;
@@ -205,16 +192,18 @@ public class Gui extends JFrame {
 						WebScrapper webScrapper = new WebScrapper();
 						
 						websiteAddress=JOptionPane.showInputDialog("Podaj adres strony");
+						website=websiteAddress;
 						webScrapper.setWebsiteAddress(websiteAddress);
 						
 						if(checkBoxTemperature.isSelected())
 						{
 							temperatureForm=JOptionPane.showInputDialog("Podaj linijkę z temperaturą (może kiedyś będzie poradnik jak to zrobić)");
+							line=temperatureForm;
 							webScrapper.setTemperatureForm(temperatureForm);
 							webScrapper.updateWeatherInfo();
 							textFieldTemperature.setText(Double.toString(webScrapper.getWeatherInfo().getTemperature()));
 						}
-						
+						/*
 						if(checkBoxHumidity.isSelected())
 						{
 							humidityForm=JOptionPane.showInputDialog("Podaj linijkę z wilgotnością (może kiedyś będzie poradnik jak to zrobić)");
@@ -232,34 +221,30 @@ public class Gui extends JFrame {
 						if(checkBoxChillWind.isSelected())
 						{
 							chillWindForm=JOptionPane.showInputDialog("Podaj linijkę z temperaturą odczuwalną (To narazie nie działa)");
-						}
+						}*/
 						
 						
 					}
+	
+
+					textFieldHumidity.setText(Double.toString(weather.getWeatherInfo().getHumidity()));
+
+					textFieldWindSpeed.setText(Double.toString(weather.getWeatherInfo().getWindSpeed()));
+
+					textFieldPressure.setText(Double.toString(weather.getWeatherInfo().getPressure()));
+					
+					textFieldWindChill.setText(String.format("%.2f",weather.getChillWind()));
+	
 					if(!checkBoxTemperature.isSelected())
 					{
 						textFieldTemperature.setText(Double.toString(weather.getWeatherInfo().getTemperature()));
 					}
-					if(!checkBoxHumidity.isSelected())
-					textFieldHumidity.setText(Double.toString(weather.getWeatherInfo().getHumidity()));
-					if(!checkBoxWindSpeed.isSelected())
-					textFieldWindSpeed.setText(Double.toString(weather.getWeatherInfo().getWindSpeed()));
-					if(!checkBoxPressure.isSelected())
-					textFieldPressure.setText(Double.toString(weather.getWeatherInfo().getPressure()));
-					
-					if(!checkBoxChillWind.isSelected())
+					else
 					{
-						if(!checkBoxTemperature.isSelected()&&!checkBoxHumidity.isSelected()&&!checkBoxWindSpeed.isSelected())
-						{
-							textFieldWindChill.setText(String.format("%.2f",weather.getChillWind()));
-						}
-						else
-						{
-							textFieldWindChill.setText(String.format("%.2f",weather.getChillWind(
-									Double.parseDouble(textFieldTemperature.getText()), 
-									Double.parseDouble(textFieldHumidity.getText()),
-									Double.parseDouble(textFieldWindSpeed.getText()))));
-						}
+						textFieldWindChill.setText(String.format("%.2f",weather.getChillWind(
+								Double.parseDouble(textFieldTemperature.getText()), 
+								Double.parseDouble(textFieldHumidity.getText()),
+								Double.parseDouble(textFieldWindSpeed.getText()))));
 					}
 					
 				} catch (Exception e) {
@@ -271,5 +256,45 @@ public class Gui extends JFrame {
 		});
 		btnUpdate.setBounds(341, 7, 91, 23);
 		contentPane.add(btnUpdate);
+		
+		JButton btnZapiszUstawienia = new JButton("Zapisz ustawienia");
+		btnZapiszUstawienia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				weather.getSettings().setCityName(textFieldCity.getText());
+				weather.getSettings().setCityId(Integer.parseInt(textFieldID.getText()));
+				
+				String[] temp;
+				temp=textFieldCoords.getText().split(",");
+				weather.getSettings().setLatitude(Double.parseDouble(temp[0]));
+				weather.getSettings().setLongitude(Double.parseDouble(temp[1]));
+				
+				weather.getSettings().setWebsite(website);
+				weather.getSettings().setLine(line);
+				
+				if(checkBoxTemperature.isSelected())
+				{
+					weather.getSettings().setOwnWebsite(true);
+				}
+				else
+				{
+					weather.getSettings().setOwnWebsite(false);
+				}
+				
+				weather.getSettings().setUpdateMode(comboBoxMode.getSelectedIndex());
+				XmlBuilder xml = new XmlBuilder(weather.getSettings());
+				xml.createXml();
+				try {
+					xml.saveXml();
+				} catch (TransformerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnZapiszUstawienia.setBounds(263, 57, 169, 23);
+		contentPane.add(btnZapiszUstawienia);
+		
+		
+		contentPane.add(checkBoxTemperature);
 	}
 }
